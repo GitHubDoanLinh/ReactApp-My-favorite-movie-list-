@@ -1,0 +1,11 @@
+Khi bắt đầu làm việc với các components của mk, ta nên đứng ở 2 vị trí là người tạo components và người dùng components 
+1: Creator là người xây dụng 1 component và xác định những props mà component đó có thể chấp nhận, trong khi consumer sử dụng component 
+ở đâu đó trong ứng dụng bằng cách chỉ định các giá trị cho các props. Và props của component chính là API công khai của component, vì vậy
+với tư cách là 1 Creator, khi ta chọn những props mà consumer được phép chuyển vào, về cơ bản ta đang xác định giao diện chung của component 
+của mình và cũng đồng thời chọn mức độ phức tạp của component mà ta muốn hiển thị cho người dùng API. Vì 1 component về cơ bản là 1 sự trừu tượng
+(gói gọn 1 phần giao diện người dùng và logic liên quan và cho phép ng dùng tương tác với component đó thông qua các props). Vì vậy cân nhắc 
+về số lượng props là cần thiết vì nếu quá ít props có thể khiên component thiếu sự linh hoạt hoặc thậm trí trở nên vô dụng với người dùng, 
+nhưng nếu có quá nhiều props có thể khiến người dùng khó sử dụng component này vì chúng ta phơi bày sự phức tạp. 
+Vì vậy khi quyết định API phù hợp cho các component của mk, ta hãy cố gắng đạt được sự cân bằng giữa quá ít và quá nhiều props, đồng thời
+tạo ra sự cân bằng cho cả Creator và consumer 
+                                                                                                (dịch từ TA :))
