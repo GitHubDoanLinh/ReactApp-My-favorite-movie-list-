@@ -51,46 +51,70 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const KEY = "5c70de67";
-  const query = "interstellar";
+  const tempQuery = "interstellar";
 
-  useEffect(function () {
-    // để đoạn mã ở trong sẽ chạy sau khi componet đã được render lên màn hình
-    async function fetchMovies() {
-      setIsLoading(true);
-      try {
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-        );
+  // useEffect(function(){
+  //   console.log("After initial render")
+  // },[])
 
-        if (!res.ok) {
-          throw new Error("Something went wrong with fetching movies");
+  // useEffect(function(){
+  //   console.log("After every render")
+  // })
+
+  // useEffect(function(){
+  //   console.log("After dependency of arr changed")
+  // },[query])
+
+  // console.log("During render")
+
+  useEffect(
+    function () {
+      // để đoạn mã ở trong sẽ chạy sau khi componet đã được render lên màn hình
+      async function fetchMovies() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          );
+
+          if (!res.ok) {
+            throw new Error("Something went wrong with fetching movies");
+          }
+
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found!");
+          setMovies(data.Search);
+          setIsLoading(false);
+        } catch (err) {
+          console.log(err.messaage);
+          setError(err.messaage);
+        } finally {
+          setIsLoading(false);
         }
-
-        const data = await res.json();
-        if (data.Response === "False") throw new Error("Movie not found!");
-        setMovies(data.Search);
-        setIsLoading(false);
-      } catch (err) {
-        console.log(err.messaage);
-        setError(err.messaage);
-      } finally {
-        setIsLoading(false);
       }
-    }
-    fetchMovies();
-  }, []); //[] để hiệu ứng sẽ chỉ thực thi khi componets đc mount vào lần đầu
+      if(!query.length){
+        setMovies([]);
+        setError("");
+        return;
+      }
+      fetchMovies();
+    },
+    [query]
+  );
 
   return (
     <>
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
       <Main>
@@ -130,8 +154,7 @@ function Logo() {
     </div>
   );
 }
-function Search() {
-  const [query, setQuery] = useState("");
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
