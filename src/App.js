@@ -214,7 +214,7 @@ function MovieDetail({ selectedId, onCloseMovie, onAddWatched, watched }) {
     Director: director,
     Genre: genre,
   } = movie;
-
+  console.log(title);
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedId,
@@ -242,6 +242,19 @@ function MovieDetail({ selectedId, onCloseMovie, onAddWatched, watched }) {
       getMovieDetails();
     },
     [selectedId]
+  );
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `Movie | ${title}`;
+
+      return function () {
+        document.title = "usePopcorn";
+        console.log(`Cleanup effect for movie ${title}`)
+      };
+    },
+    [title]
   );
 
   return (
@@ -363,7 +376,9 @@ function WatchedMovie({ movie, onDeleteWatched }) {
           onClick={() => {
             onDeleteWatched(movie.imdbID);
           }}
-        >✖️</button>
+        >
+          ✖️
+        </button>
       </div>
     </li>
   );
